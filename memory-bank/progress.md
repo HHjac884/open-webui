@@ -100,6 +100,16 @@
    - **Impact**: Non-fatal; Pyodide is optional for LM Studio setups
    - **Resolution**: Ignore for LM Studio deployments
 
+6. **LM Studio "Unexpected endpoint or method" Error** (January 2026)
+   - **Error Message**: LM Studio logs show "Unexpected endpoint or method. (POST /chat/completions). Returning 200 anyway"
+   - **Observed Behavior**: 
+     - Main chat completion: Works (returns `{'status': True}`)
+     - Background tasks fail: `generate_follow_ups`, `generate_title`, `generate_chat_tags`
+   - **Root Cause**: Open WebUI's request format differs from what LM Studio expects
+   - **Workaround**: Background tasks fail with exceptions but main chat works
+   - **Note**: Silly Tavern connects successfully to same LM Studio instance, confirming LM Studio is configured correctly
+   - **Status**: Main functionality works; background task failures are cosmetic
+
 ## What's Left to Build
 
 ### Potential Enhancements (Not Confirmed)

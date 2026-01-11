@@ -242,6 +242,32 @@ FRONTEND_BUILD_DIR=C:\__My_Code_Here__\open-webui\build
 
 ## Learnings from Recent Session (January 2026)
 
+### LM Studio Connection Issues
+
+#### "Unexpected endpoint or method" Error
+- **Error Message**: "Unexpected endpoint or method. (POST /chat/completions). Returning 200 anyway"
+- **Source**: LM Studio Developer Logs
+- **Root Cause**: Open WebUI makes requests to endpoints that LM Studio doesn't fully support
+- **Impact**: 
+  - Main chat request: Works (returns `{'status': True}`)
+  - Background tasks fail: `generate_follow_ups`, `generate_title`, `generate_chat_tags`
+- **Observed Behavior**:
+  ```
+  INFO  | open_webui.utils.chat:generate_direct_chat_completion:109 - res: {'status': True}
+  ERROR | Exception: Unexpected endpoint or method. (POST /chat/completions)
+  ```
+- **Note**: Silly Tavern works fine with the same LM Studio setup, indicating the issue is specific to Open WebUI's request format
+
+#### Verification Steps
+1. Test LM Studio connectivity with curl:
+   ```bash
+   curl -X POST http://<IP>:1234/v1/chat/completions \
+     -H "Content-Type: application/json" \
+     -d '{"model": "<model-name>", "messages": [{"role": "user", "content": "Hello"}]}'
+   ```
+2. If curl works but Open WebUI doesn't, the issue is in Open WebUI's request formatting
+3. Check backend logs for exact request format being sent
+
 ### Common Setup Pitfalls
 
 1. **Backend Not Running**: Frontend will show "Backend Required" error
