@@ -59,6 +59,47 @@
 - ✅ Dark/light theme support
 - ✅ Internationalization (i18n)
 
+## Development Setup (Verified January 2026)
+
+### Frontend Setup
+- ✅ npm install with `--force` flag resolves Tiptap dependency conflicts
+- ✅ Development server runs on port 5173
+- ✅ Production build creates `build/` directory
+- ✅ Hot reload enabled via Vite
+
+### Backend Setup
+- ✅ Python 3.11+ with Conda environment
+- ✅ Dependencies install via `pip install -r requirements.txt`
+- ✅ Server runs on port 8080 with uvicorn
+- ✅ Backend must run from `backend/` directory
+
+### Known Setup Issues (Documented)
+
+1. **Backend Not Running**
+   - **Error**: "Open WebUI Backend Required" in browser
+   - **Fix**: Start backend from `backend/` directory
+   - **Required**: Both frontend (5173) and backend (8080) must run simultaneously
+
+2. **Module Not Found**
+   - **Error**: `ModuleNotFoundError: No module named 'open_webui'`
+   - **Cause**: Running backend from wrong directory
+   - **Fix**: Navigate to `backend/` before running `python -m uvicorn open_webui.main:app`
+
+3. **npm Install Conflicts**
+   - **Error**: `ERESOLVE could not resolve` - Tiptap peer dependency conflicts
+   - **Fix**: Use `npm install --force` (documented in official docs)
+   - **Alternative**: `npm install --legacy-peer-deps`
+
+4. **Build Directory Missing**
+   - **Warning**: `Frontend build directory not found`
+   - **Fix**: Run `npm run build` from project root
+   - **Note**: Backend serves production frontend from `build/` directory
+
+5. **Pyodide Package Failures**
+   - **Error**: Some Pyodide packages (seaborn) fail to fetch from CDN
+   - **Impact**: Non-fatal; Pyodide is optional for LM Studio setups
+   - **Resolution**: Ignore for LM Studio deployments
+
 ## What's Left to Build
 
 ### Potential Enhancements (Not Confirmed)
@@ -78,11 +119,11 @@
 
 ### Version
 - **Current**: v0.7.1
-- **Git Commit**: 0fb72a105e3297e0fd474ec6a6d243513bc055dc
+- **Git Commit**: 00b900829a33cc68cbc2d937a94910c173fb15c8
 - **Status**: Stable, active development
+- **Last Updated**: January 10, 2026
 
-### Known Issues
-Based on project structure and documentation:
+### Known Issues (Updated)
 
 1. **Ollama Connection Issues**
    - Docker container may not reach Ollama at `127.0.0.1:11434`
@@ -91,10 +132,19 @@ Based on project structure and documentation:
 2. **Frontend Build Directory**
    - Warning logged if `FRONTEND_BUILD_DIR` not found
    - Falls back to API-only mode
+   - Solution: Run `npm run build` before starting backend
 
 3. **Dev Branch Instability**
    - `:dev` tag contains bleeding-edge features
    - May have bugs or incomplete features
+
+4. **Backend Dependency Conflicts**
+   - Tiptap packages have version mismatches between v2 and v3
+   - Documented solution: `npm install --force`
+
+5. **Directory-Sensitive Backend Startup**
+   - Backend must be started from `backend/` directory
+   - Running from project root causes `ModuleNotFoundError`
 
 ### Testing Status
 - ✅ Frontend unit tests (Vitest) - configured
@@ -139,6 +189,12 @@ Based on project structure and documentation:
 - `CORS_ALLOW_ORIGIN` - Security requirement
 - File storage volume - Data persistence
 
+### Development Configuration (Windows)
+- Python 3.11+ with Conda environment
+- Node.js 22.10+ with `--force` for npm install
+- Separate terminals for frontend (5173) and backend (8080)
+- Backend must be run from `backend/` directory
+
 ## Maintenance Recommendations
 
 ### Regular Tasks
@@ -170,6 +226,13 @@ Based on project structure and documentation:
 3. Update error messages in `constants.py` if needed
 4. Document the fix in `activeContext.md` if significant
 
+### When Setting Up Development Environment
+1. Navigate to `backend/` directory before starting backend
+2. Use `npm install --force` for Tiptap dependency conflicts
+3. Run `npm run build` before accessing via backend port
+4. Start both frontend (5173) and backend (8080) simultaneously
+5. Configure `.env` with `OPENAI_API_BASE_URL` for LM Studio integration
+
 ### When Contributing
 1. Follow project's contribution guidelines
 2. Maintain consistency with existing code style
@@ -194,4 +257,4 @@ Based on project structure and documentation:
 
 ---
 
-*This progress document should be updated regularly to reflect the current state of the project.*
+*This progress document was updated on January 10, 2026 to reflect learnings from development setup session.*
